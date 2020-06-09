@@ -1,0 +1,38 @@
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.util.StringTokenizer;
+public class ServidorUDP {
+		public static void main (String [] args)
+		{
+			System.out.println("-------SERVIDOR---------");
+			try {
+				DatagramSocket socketUDP =new DatagramSocket(8888);
+				byte[] bufer =new byte[10000];
+				while(true)
+				{
+					String x="",y="";
+					DatagramPacket peticion=new DatagramPacket(bufer, bufer.length);
+					socketUDP.receive(peticion);
+
+				//	DatagramPacket mensaje= new DatagramPacket(peticion.getData(), peticion.getLength(), peticion.getAddress(), peticion.getPort());
+				//	socketUDP.send(mensaje);
+					System.out.println("DATOS : "+new String(peticion.getData()));
+					x=new String(peticion.getData());
+					StringTokenizer nro=new StringTokenizer(x);
+					System.out.println("Numero de Palabras : "+ nro.countTokens());
+					y=Integer.toString(nro.countTokens());
+					byte[] enviar=y.getBytes();
+					DatagramPacket mensaje= new DatagramPacket(enviar, y.length(), peticion.getAddress(), peticion.getPort());
+					socketUDP.send(mensaje);
+
+				//	System.out.println("PUERTOS DEL CLIENTE "+ peticion.getPort());
+				//	System.out.println("TAM "+peticion.getLength() );
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println(e);
+			}
+			
+			//no reinicia el StringTokenizer :(, las palabras se cuentas solo si incrementan 
+		}
+}
