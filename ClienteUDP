@@ -1,0 +1,33 @@
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.io.*;
+class ClienteUDP {
+		public static void main (String[] args){
+			System.out.println("-------CLIENTE-------");
+			try {
+				DatagramSocket socketUDP=new DatagramSocket();
+				int puerto=8888;
+				InetAddress host= InetAddress.getByName("localhost");
+				
+				BufferedReader sc=new BufferedReader(new InputStreamReader(System.in));
+				
+				String cad;
+				while(true){
+					cad=sc.readLine();
+					if(cad.equals("salir"))break;
+					byte[]men= cad.getBytes();
+					DatagramPacket peticion=new DatagramPacket(men ,cad.length(),host,puerto);
+					socketUDP.send(peticion);
+					byte[]buffer= cad.getBytes();
+					DatagramPacket mensaje=new DatagramPacket(buffer,buffer.length);
+					socketUDP.receive(mensaje);
+					System.out.println("LA RESPUESTA DEL SERVIDOR ES : "+ new String(mensaje.getData()));
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+}
